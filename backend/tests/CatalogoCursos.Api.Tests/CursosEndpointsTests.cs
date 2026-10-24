@@ -51,6 +51,7 @@ public sealed class CursosEndpointsTests(ApiFactory factory)
             Assert.True(c.CargaHoraria > 0);
             Assert.False(string.IsNullOrWhiteSpace(c.PublicoAlvo));
             Assert.StartsWith("http", c.ImagemUrl);
+            Assert.Matches(@"\?v=[0-9a-f]{8}$", c.ImagemUrl); // cache busting pelo hash do arquivo
             Assert.False(string.IsNullOrWhiteSpace(c.ImagemDescricao));
             Assert.True(c.TotalModulos > 0);
         });
