@@ -1,0 +1,302 @@
+.pagina-estado {
+  min-height: 70vh;
+  padding-top: calc(var(--altura-header) + 3rem);
+}
+
+/* ----- Apresentação ----- */
+.detalhe-topo {
+  padding-block: calc(var(--altura-header) + 2.5rem) 3rem;
+}
+
+.detalhe-topo__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.detalhe-topo__texto {
+  display: grid;
+  justify-items: start;
+  gap: 1.25rem;
+}
+
+.detalhe-topo__texto .trilha ol {
+  margin-bottom: 0.25rem;
+}
+
+.detalhe-topo__titulo {
+  font-size: var(--fs-h1);
+  line-height: 1.18;
+}
+
+.detalhe-topo__meta {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.25rem 0 1rem;
+  font-size: 1.0625rem;
+}
+
+.detalhe-topo__meta li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.detalhe-topo__meta svg {
+  flex-shrink: 0;
+}
+
+.detalhe-topo__midia {
+  border-radius: var(--raio);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--cor-fundo-suave);
+}
+
+.detalhe-topo__midia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ----- Ficha técnica ----- */
+.ficha__grade {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: var(--cor-borda);
+}
+
+.ficha__item {
+  padding: 1.125rem 1.25rem;
+  background: var(--cor-branco);
+}
+
+.ficha__item--largo {
+  grid-column: span 3;
+}
+
+.ficha__item dt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: var(--fs-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+.ficha__item dd {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ficha__item code {
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9375rem;
+}
+
+.ficha .status--inscricoes-abertas {
+  color: #0f7b36;
+}
+
+.ficha .status--em-breve {
+  color: #a35a00;
+}
+
+.ficha .status--encerrado {
+  color: var(--cor-texto-suave);
+}
+
+/* ----- Benefícios ----- */
+.detalhe-beneficios {
+  padding-block: clamp(3.5rem, 2.5rem + 4vw, 5.5rem) 0;
+}
+
+/* ----- Sobre o curso ----- */
+.sobre-curso {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding-block: clamp(3.5rem, 2.5rem + 4vw, 5.5rem) var(--secao);
+  align-items: start;
+}
+
+.sobre-curso__texto {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.sobre-curso__texto p {
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+}
+
+.acordeao__texto {
+  color: var(--cor-texto-suave);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.modulos {
+  margin: 0;
+}
+
+.modulo .acordeao__item {
+  border-bottom-color: var(--cor-borda);
+}
+
+.modulo:last-child .acordeao__item {
+  border-bottom: 0;
+}
+
+.modulo__descricao {
+  margin-bottom: 1rem;
+  color: var(--cor-texto-suave);
+}
+
+.modulo__carga {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.aulas {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.aula {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.875rem;
+  align-items: start;
+  padding: 0.75rem 1rem;
+  border-radius: var(--raio-sm);
+  background: var(--cor-fundo-suave);
+}
+
+.aula__numero {
+  min-width: 2.25rem;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.aula strong {
+  display: block;
+  font-weight: 600;
+}
+
+.aula p {
+  font-size: var(--fs-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+.aula__duracao {
+  font-size: var(--fs-pequeno);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ----- Barra fixa de matrícula ----- */
+.barra-matricula {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
+  z-index: 50;
+  padding-inline: var(--respiro-lateral);
+  pointer-events: none;
+  animation: subir 300ms ease both;
+}
+
+@keyframes subir {
+  from {
+    transform: translateY(120%);
+  }
+}
+
+/* Espaço extra no rodapé para a barra fixa não cobrir o conteúdo final. */
+.com-barra-fixa .rodape {
+  padding-bottom: 8rem;
+}
+
+.barra-matricula__conteudo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  max-width: var(--largura-max);
+  margin-inline: auto;
+  padding: 1rem 1rem 1rem 1.75rem;
+  border-radius: var(--raio-lg);
+  background: var(--cor-preto);
+  color: var(--cor-branco);
+  box-shadow: 0 12px 40px -10px rgb(0 0 0 / 0.5);
+  pointer-events: auto;
+}
+
+.barra-matricula__nome {
+  font-size: 1.25rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ----- Responsivo ----- */
+@media (max-width: 960px) {
+  .detalhe-topo__grade,
+  .sobre-curso {
+    grid-template-columns: 1fr;
+  }
+
+  .detalhe-topo__midia {
+    order: -1;
+  }
+
+  .ficha__grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ficha__item--largo {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 560px) {
+  .ficha__grade {
+    grid-template-columns: 1fr;
+  }
+
+  .ficha__item--largo {
+    grid-column: auto;
+  }
+
+  .barra-matricula__conteudo {
+    padding: 0.75rem 0.75rem 0.75rem 1rem;
+  }
+
+  .barra-matricula__nome {
+    font-size: 0.9375rem;
+  }
+
+  .barra-matricula .botao {
+    padding-inline: 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .aula {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .aula__duracao {
+    grid-column: 2;
+  }
+}

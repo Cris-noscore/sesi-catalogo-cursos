@@ -71,7 +71,12 @@ async function requisitar<T>(caminho: string, signal?: AbortSignal): Promise<T> 
 }
 
 /** Monta a query string a partir do estado de busca/filtros. */
-export function montarQuery(consulta: ConsultaCursos, tamanhoPagina = TAMANHO_PAGINA): string {
+export interface OpcoesListagem {
+  destaque?: boolean;
+  tamanhoPagina?: number;
+}
+
+export function montarQuery(consulta: ConsultaCursos, opcoes: OpcoesListagem = {}): string {
   const params = new URLSearchParams();
   const busca = consulta.busca.trim();
   if (busca) params.set('busca', busca);
@@ -80,13 +85,14 @@ export function montarQuery(consulta: ConsultaCursos, tamanhoPagina = TAMANHO_PA
   if (consulta.status.length) params.set('status', consulta.status.join(','));
   if (consulta.ordenacao !== 'relevancia') params.set('ordenacao', consulta.ordenacao);
   params.set('pagina', String(consulta.pagina));
-  params.set('tamanhoPagina', String(tamanhoPagina));
+  params.set('tamanhoPagina', String(opcoes.tamanhoPagina ?? TAMANHO_PAGINA));
+  if (opcoes.destaque !== undefined) params.set('destaque', String(opcoes.destaque));
   return params.toString();
 }
 
 export const api = {
-  listarCursos: (consulta: ConsultaCursos, signal?: AbortSignal) =>
-    requisitar<ResultadoPaginado<CursoResumo>>(`/api/cursos?${montarQuery(consulta)}`, signal),
+  listarCursos: (consulta: ConsultaCursos, signal?: AbortSignal, opcoes?: OpcoesListagem) =>
+    requisitar<ResultadoPaginado<CursoResumo>>(`/api/cursos?${montarQuery(consulta, opcoes)}`, signal),
 
   obterCurso: (id: number, signal?: AbortSignal) => requisitar<CursoDetalhe>(`/api/cursos/${id}`, signal),
 

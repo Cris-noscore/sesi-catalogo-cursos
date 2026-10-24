@@ -1,0 +1,215 @@
+/* ----- Benefícios ----- */
+.beneficios {
+  display: grid;
+  grid-template-columns: repeat(var(--colunas, 4), minmax(0, 1fr));
+  gap: 2rem;
+  margin: 0;
+}
+
+.beneficios--3 {
+  --colunas: 3;
+}
+
+.beneficio__icone {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--raio-sm);
+  margin-bottom: 1.25rem;
+}
+
+.beneficios--rosa .beneficio__icone {
+  background: var(--cor-rosa-claro);
+  color: var(--cor-marca);
+}
+
+.beneficios--bege .beneficio__icone {
+  background: var(--cor-bege);
+  color: var(--cor-preto);
+}
+
+.beneficio__titulo {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0;
+}
+
+.beneficio__texto {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--cor-texto-apoio);
+}
+
+@media (max-width: 960px) {
+  .beneficios {
+    --colunas: 2;
+  }
+}
+
+@media (max-width: 560px) {
+  .beneficios,
+  .beneficios--3 {
+    --colunas: 1;
+    gap: 1.75rem;
+  }
+}
+
+/* ----- Depoimentos ----- */
+.depoimentos {
+  padding-block: var(--secao) calc(var(--secao) - 1rem);
+}
+
+.depoimentos .titulo-secao {
+  margin-bottom: 2.5rem;
+}
+
+.depoimentos--vermelho {
+  background: var(--cor-vermelho-escuro);
+  color: var(--cor-branco);
+}
+
+.depoimentos--bege {
+  background: var(--cor-bege);
+  color: var(--cor-preto);
+}
+
+.depoimento {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+  min-height: 454px;
+  padding: 1.75rem;
+  border-radius: var(--raio);
+}
+
+.depoimentos--vermelho .depoimento {
+  background: var(--cor-vermelho);
+  color: var(--cor-branco);
+}
+
+.depoimentos--bege .depoimento {
+  background: var(--cor-branco);
+  color: var(--cor-preto);
+  box-shadow: var(--sombra-suave);
+}
+
+.depoimento blockquote {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.depoimento figcaption {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.depoimento figcaption strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.depoimento figcaption span {
+  font-size: 0.9375rem;
+}
+
+.depoimentos--vermelho .depoimento figcaption span {
+  color: rgb(255 255 255 / 0.85);
+}
+
+.depoimentos--bege .depoimento figcaption span {
+  color: var(--cor-texto-apoio);
+}
+
+.depoimento__nota {
+  display: flex;
+  gap: 2px;
+  margin-top: 1rem;
+}
+
+.depoimentos--bege .depoimento__nota {
+  color: var(--cor-preto) !important;
+}
+
+.depoimentos--vermelho .depoimento__nota {
+  color: var(--cor-branco) !important;
+}
+
+/* ----- Miniatura de vídeo ----- */
+.miniatura-video {
+  position: relative;
+  border-radius: var(--raio);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #222;
+}
+
+.miniatura-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.miniatura-video__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--cor-preto);
+  transform: translate(-50%, -50%);
+}
+
+.miniatura-video__play svg {
+  margin-left: 6px;
+}
+
+/* ----- Chamada "Pronto para transformar sua carreira?" ----- */
+.chamada-carreira {
+  background: var(--cor-vermelho-escuro);
+  color: var(--cor-branco);
+  padding-block: var(--secao);
+}
+
+.chamada-carreira__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 8fr);
+  gap: clamp(2rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.chamada-carreira__texto {
+  display: grid;
+  gap: 1.75rem;
+  justify-items: start;
+}
+
+.chamada-carreira__texto p {
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .chamada-carreira__grade {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----- Fale com a gente ----- */
+.fale-conosco {
+  background: var(--cor-vermelho-escuro);
+  color: var(--cor-branco);
+  padding-block: clamp(4rem, 3rem + 4vw, 5.5rem);
+  text-align: center;
+}
+
+.fale-conosco .titulo-secao {
+  margin-bottom: 2rem;
+}

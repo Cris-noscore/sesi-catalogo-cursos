@@ -1,0 +1,47 @@
+.acordeao__item {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.acordeao__titulo {
+  margin: 0;
+}
+
+.acordeao__botao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.25rem 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.acordeao__item--grande .acordeao__botao {
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+}
+
+.acordeao__item--compacto .acordeao__botao {
+  font-size: 1.0625rem;
+  padding: 1rem 0;
+}
+
+.acordeao__botao svg {
+  flex-shrink: 0;
+}
+
+.acordeao__botao:hover span {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.acordeao__painel {
+  padding: 0 0 1.5rem;
+}
+
+.acordeao__item--compacto .acordeao__painel {
+  padding-bottom: 1rem;
+}

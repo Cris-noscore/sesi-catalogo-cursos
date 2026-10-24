@@ -1,0 +1,51 @@
+.carrossel {
+  --recuo: max(var(--respiro-lateral), calc((100vw - var(--largura-max)) / 2));
+}
+
+.carrossel__trilho {
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 8px var(--recuo) 32px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--recuo);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.carrossel__trilho::-webkit-scrollbar {
+  display: none;
+}
+
+.carrossel__trilho:focus-visible {
+  outline-offset: -3px;
+}
+
+.carrossel__item {
+  flex: 0 0 auto;
+  width: min(315px, 82vw);
+  scroll-snap-align: start;
+  display: flex;
+}
+
+.carrossel__item > * {
+  flex: 1;
+}
+
+.carrossel--depoimento .carrossel__item {
+  width: min(315px, 82vw);
+}
+
+.carrossel__controles {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.carrossel__setas {
+  display: flex;
+  gap: 1rem;
+}
