@@ -21,6 +21,9 @@ public sealed class CursoConsulta
     /// <summary>Slug(s) de status separados por vírgula. Ex.: inscricoes-abertas</summary>
     public string? Status { get; set; }
 
+    /// <summary>Quando true, retorna apenas cursos em destaque (vitrine "Principais cursos").</summary>
+    public bool? Destaque { get; set; }
+
     /// <summary>relevancia (padrão), nome, carga-horaria ou recentes.</summary>
     public string? Ordenacao { get; set; }
 

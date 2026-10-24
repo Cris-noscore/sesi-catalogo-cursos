@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS aula (
     modulo_id        integer      NOT NULL REFERENCES modulo (id) ON DELETE CASCADE,
     ordem            smallint     NOT NULL,
     titulo           varchar(200) NOT NULL,
-    descricao        varchar(600) NOT NULL,
+    descricao        text         NOT NULL,              -- conteúdo exibido na tela de aula (AVA)
     duracao_minutos  smallint     NOT NULL CHECK (duracao_minutos > 0),
     UNIQUE (modulo_id, ordem)
 );

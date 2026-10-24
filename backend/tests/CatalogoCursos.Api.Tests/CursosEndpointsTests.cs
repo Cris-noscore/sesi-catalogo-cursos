@@ -61,7 +61,7 @@ public sealed class CursosEndpointsTests(ApiFactory factory)
     [Theory]
     [InlineData("estatistica")]   // sem acento
     [InlineData("ESTATÍSTICA")]   // maiúsculas e com acento
-    [InlineData("análise dados")] // múltiplos termos, fora de ordem
+    [InlineData("qualidade controle")] // múltiplos termos, fora de ordem
     [InlineData("mat-estat")]     // nome breve
     public async Task Busca_por_nome_ignora_acentos_e_maiusculas(string busca)
     {
@@ -124,6 +124,14 @@ public sealed class CursosEndpointsTests(ApiFactory factory)
         Assert.Equal(0, resultado.Total);
         Assert.Empty(resultado.Itens);
         Assert.Equal(0, resultado.TotalPaginas);
+    }
+
+    [Fact]
+    public async Task Filtro_de_destaque_retorna_os_cursos_da_vitrine()
+    {
+        var resultado = await ListarAsync("?destaque=true&tamanhoPagina=50");
+        Assert.Equal(6, resultado.Total);
+        Assert.All(resultado.Itens, c => Assert.True(c.Destaque));
     }
 
     // ---------- Paginação, ordenação e validação ----------

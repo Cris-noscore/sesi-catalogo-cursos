@@ -105,7 +105,7 @@ public class CatalogoDbContext(DbContextOptions<CatalogoDbContext> options) : Db
             e.Property(x => x.ModuloId).HasColumnName("modulo_id");
             e.Property(x => x.Ordem).HasColumnName("ordem");
             e.Property(x => x.Titulo).HasColumnName("titulo").HasMaxLength(200);
-            e.Property(x => x.Descricao).HasColumnName("descricao").HasMaxLength(600);
+            e.Property(x => x.Descricao).HasColumnName("descricao");
             e.Property(x => x.DuracaoMinutos).HasColumnName("duracao_minutos");
         });
     }

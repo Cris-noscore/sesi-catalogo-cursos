@@ -34,16 +34,27 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
         with:
           global-json-file: backend/global.json
       - run: dotnet restore
       - run: dotnet build --no-restore -c Release
       - run: dotnet test --no-build -c Release --logger "trx;LogFileName=resultados.trx" --logger "console;verbosity=normal"
+      - name: Resumo dos testes
+        if: always()
+        run: |
+          for f in $(find . -name '*.trx'); do
+            linha=$(grep -o '<Counters [^>]*>' "$f")
+            total=$(echo "$linha" | grep -o 'total="[0-9]*"' | grep -o '[0-9]*')
+            passou=$(echo "$linha" | grep -o 'passed="[0-9]*"' | grep -o '[0-9]*')
+            falhou=$(echo "$linha" | grep -o 'failed="[0-9]*"' | grep -o '[0-9]*')
+            echo "::notice title=Testes do back-end::${passou}/${total} aprovados, ${falhou} falharam"
+            echo "### Testes do back-end: ${passou}/${total} aprovados, ${falhou} falharam" >> "$GITHUB_STEP_SUMMARY"
+          done
       - name: Publicar resultados dos testes
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: resultados-testes-backend
           path: backend/**/TestResults/*.trx
@@ -55,8 +66,8 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm

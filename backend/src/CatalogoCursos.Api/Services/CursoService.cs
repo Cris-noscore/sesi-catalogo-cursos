@@ -45,6 +45,9 @@ public sealed class CursoService(CatalogoDbContext db, IUrlImagens urlImagens) :
         if (status.Length > 0)
             query = query.Where(c => status.Contains(c.Status.Slug));
 
+        if (consulta.Destaque.HasValue)
+            query = query.Where(c => c.Destaque == consulta.Destaque.Value);
+
         var total = await query.CountAsync(ct);
 
         query = (consulta.Ordenacao?.ToLowerInvariant()) switch
