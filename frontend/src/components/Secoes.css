@@ -117,7 +117,7 @@
 }
 
 .depoimentos--vermelho .depoimento figcaption span {
-  color: rgb(255 255 255 / 0.85);
+  color: var(--cor-branco); /* 85% de opacidade reprovava no contraste AA (4,09:1) */
 }
 
 .depoimentos--bege .depoimento figcaption span {

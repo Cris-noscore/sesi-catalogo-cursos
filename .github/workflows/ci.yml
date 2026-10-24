@@ -40,8 +40,20 @@ jobs:
           global-json-file: backend/global.json
       - run: dotnet restore
       - run: dotnet build --no-restore -c Release
-      - run: dotnet test --no-build -c Release --logger "trx;LogFileName=resultados.trx" --logger "console;verbosity=normal"
-      - name: Resumo dos testes
+      - name: Testes (xUnit) com cobertura (coverlet)
+        run: >
+          dotnet test --no-build -c Release
+          --logger "trx;LogFileName=resultados.trx" --logger "console;verbosity=normal"
+          --collect:"XPlat Code Coverage" --results-directory TestResults
+      - name: Relatório de cobertura (ReportGenerator)
+        if: always()
+        uses: danielpalme/ReportGenerator-GitHub-Action@5
+        with:
+          reports: backend/TestResults/**/coverage.cobertura.xml
+          targetdir: backend/TestResults/cobertura
+          reporttypes: Html;JsonSummary;MarkdownSummaryGithub
+          assemblyfilters: +CatalogoCursos.Api
+      - name: Resumo dos testes e da cobertura
         if: always()
         run: |
           for f in $(find . -name '*.trx'); do
@@ -52,12 +64,19 @@ jobs:
             echo "::notice title=Testes do back-end::${passou}/${total} aprovados, ${falhou} falharam"
             echo "### Testes do back-end: ${passou}/${total} aprovados, ${falhou} falharam" >> "$GITHUB_STEP_SUMMARY"
           done
-      - name: Publicar resultados dos testes
+          if [ -f TestResults/cobertura/Summary.json ]; then
+            cobertura=$(python3 -c "import json; s=json.load(open('TestResults/cobertura/Summary.json'))['summary']; print('linhas', str(s['linecoverage'])+'%', '· ramos', str(s['branchcoverage'])+'%')")
+            echo "::notice title=Cobertura do back-end::${cobertura}"
+            cat TestResults/cobertura/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Publicar resultados e cobertura
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: resultados-testes-backend
-          path: backend/**/TestResults/*.trx
+          name: backend-testes-e-cobertura
+          path: |
+            backend/TestResults/**/*.trx
+            backend/TestResults/cobertura
 
   frontend:
     name: Front-end (React + Vite)
@@ -73,29 +92,64 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
-      - run: npm run lint
-      - run: npm test -- --run
-      - run: npm run build
+      - name: Lint (ESLint)
+        run: npm run lint
+      - name: Testes (Vitest + Testing Library) com cobertura
+        run: npm run test:cobertura
+      - name: Resumo da cobertura
+        if: always()
+        run: |
+          python3 -c "import json; t=json.load(open('coverage/coverage-summary.json'))['total']; print('::notice title=Cobertura do front-end::linhas', str(t['lines']['pct'])+'%', '· ramos', str(t['branches']['pct'])+'%')"
+          python3 -c "import json; t=json.load(open('coverage/coverage-summary.json'))['total']; print('### Cobertura do front-end (Vitest): linhas', str(t['lines']['pct'])+'%, funções', str(t['functions']['pct'])+'%, ramos', str(t['branches']['pct'])+'%')" >> "$GITHUB_STEP_SUMMARY"
+      - name: Build (TypeScript + Vite)
+        run: npm run build
+      - name: Publicar cobertura
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: frontend-cobertura
+          path: frontend/coverage
 
-  docker:
-    name: Docker Compose (teste ponta a ponta)
+  e2e:
+    name: E2E (Docker Compose + Playwright + axe)
     runs-on: ubuntu-latest
     needs: [backend, frontend]
     steps:
       - uses: actions/checkout@v5
       - name: Subir banco, API e front-end
         run: docker compose up -d --build --wait --wait-timeout 300
-      - name: Verificar API, front-end e integração via Nginx
+      - name: Verificar integração (API, banco e front-end via Nginx)
         run: |
           set -e
           for i in $(seq 1 30); do curl -fsS http://localhost:5080/health && break; sleep 3; done
           curl -fsS http://localhost:5080/health
           curl -fsS http://localhost:8080/ | grep -q '<div id="root">'
           total=$(curl -fsS "http://localhost:8080/api/cursos?tamanhoPagina=50" | python3 -c "import json,sys; print(json.load(sys.stdin)['total'])")
-          echo "Cursos retornados via front-end/Nginx: $total"
           test "$total" -ge 6
-          curl -fsS -o /dev/null http://localhost:8080/cursos/1   # rota SPA
           echo "::notice title=Docker Compose::Aplicação completa no ar (API + banco + front-end), $total cursos"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+      - name: Instalar Playwright
+        working-directory: e2e
+        run: npm ci && npx playwright install --with-deps chromium
+      - name: Testes E2E e de acessibilidade (desktop e mobile)
+        working-directory: e2e
+        env:
+          BASE_URL: http://localhost:8080
+        run: npx playwright test
+      - name: Resumo dos testes E2E
+        if: always()
+        working-directory: e2e
+        run: test -f test-results/resultados.json && python3 resumo.py || true
+      - name: Publicar relatório do Playwright
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: relatorio-playwright
+          path: e2e/playwright-report
       - name: Logs em caso de falha
         if: failure()
         run: docker compose logs --no-color
