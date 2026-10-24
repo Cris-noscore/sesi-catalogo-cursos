@@ -1,0 +1,65 @@
+name: Pacote de publicação (ZIP)
+
+# Gera o ZIP com os arquivos de publicação (API compilada, front-end compilado,
+# scripts do banco e arquivos de execução local) e anexa a uma Release do GitHub.
+# Executar manualmente em Actions → "Pacote de publicação (ZIP)" → Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      versao:
+        description: "Versão (ex.: v1.0.0)"
+        required: true
+        default: "v1.0.0"
+
+permissions:
+  contents: write
+
+jobs:
+  pacote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: backend/global.json
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Publicar API (.NET, Release)
+        run: dotnet publish backend/src/CatalogoCursos.Api/CatalogoCursos.Api.csproj -c Release -o publicacao/api /p:UseAppHost=false
+
+      - name: Compilar front-end (Vite)
+        working-directory: frontend
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: npm ci && npm run build && cp -r dist ../publicacao/frontend
+
+      - name: Montar pacote
+        run: |
+          cp -r database publicacao/database
+          cp docker-compose.yml README.md USO_DE_IA.md LIMITACOES.md publicacao/
+          cat > publicacao/LEIAME.txt <<TXT
+          Catálogo de Cursos — CTED (processo seletivo Desenvolvedor de Sistemas I)
+          Versão: ${{ inputs.versao }}  |  Commit: ${{ github.sha }}
+
+          api/       API ASP.NET Core (.NET 10) compilada. Executar: dotnet CatalogoCursos.Api.dll
+                     (requer ConnectionStrings__Default apontando para um PostgreSQL 14+)
+          frontend/  Front-end React compilado (arquivos estáticos). API configurada: ${{ vars.VITE_API_URL }}
+          database/  Scripts SQL versionados (estrutura + dados fictícios)
+          docker-compose.yml  Execução local completa (requer o código-fonte do repositório)
+          README.md, USO_DE_IA.md, LIMITACOES.md  Documentação
+          TXT
+          cd publicacao && zip -qr ../catalogo-cursos-publicacao-${{ inputs.versao }}.zip . && cd ..
+          unzip -l catalogo-cursos-publicacao-${{ inputs.versao }}.zip | tail -1
+
+      - name: Criar Release com o ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ inputs.versao }}" "catalogo-cursos-publicacao-${{ inputs.versao }}.zip" \
+            --title "Catálogo de Cursos ${{ inputs.versao }}" \
+            --notes "Pacote de publicação: API compilada (.NET 10), front-end compilado (React/Vite), scripts do banco e documentação." \
+            || gh release upload "${{ inputs.versao }}" "catalogo-cursos-publicacao-${{ inputs.versao }}.zip" --clobber
