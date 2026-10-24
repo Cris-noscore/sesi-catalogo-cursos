@@ -40,7 +40,7 @@ jobs:
       - name: Montar pacote
         run: |
           cp -r database publicacao/database
-          cp docker-compose.yml README.md USO_DE_IA.md LIMITACOES.md publicacao/
+          cp docker-compose.yml README.md USO_DE_IA.md LIMITACOES.md docs/TESTES.md publicacao/
           cat > publicacao/LEIAME.txt <<TXT
           Catálogo de Cursos — CTED (processo seletivo Desenvolvedor de Sistemas I)
           Versão: ${{ inputs.versao }}  |  Commit: ${{ github.sha }}
@@ -50,7 +50,7 @@ jobs:
           frontend/  Front-end React compilado (arquivos estáticos). API configurada: ${{ vars.VITE_API_URL || 'https://sesi-catalogo-api.onrender.com' }}
           database/  Scripts SQL versionados (estrutura + dados fictícios)
           docker-compose.yml  Execução local completa (requer o código-fonte do repositório)
-          README.md, USO_DE_IA.md, LIMITACOES.md  Documentação
+          README.md, USO_DE_IA.md, LIMITACOES.md, TESTES.md  Documentação
           TXT
           cd publicacao && zip -qr ../catalogo-cursos-publicacao-${{ inputs.versao }}.zip . && cd ..
           unzip -l catalogo-cursos-publicacao-${{ inputs.versao }}.zip | tail -1
