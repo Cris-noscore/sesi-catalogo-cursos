@@ -1,0 +1,23 @@
+name: Manter aplicação ativa
+
+# O plano gratuito do Render "adormece" a API após 15 min sem acesso (o primeiro
+# acesso depois disso leva ~50 s) e o Supabase pausa projetos após 7 dias sem uso.
+# Este workflow chama /health (que também consulta o banco) a cada 14 minutos
+# no horário comercial de Brasília, mantendo API e banco prontos para a avaliação.
+on:
+  schedule:
+    - cron: "*/14 10-23 * * *" # 07h–20h59 (BRT, UTC-3)
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    if: ${{ vars.API_URL != '' }}
+    steps:
+      - name: Chamar /health da API
+        run: |
+          for tentativa in 1 2 3; do
+            if curl -fsS --max-time 90 "${{ vars.API_URL }}/health"; then exit 0; fi
+            sleep 20
+          done
+          exit 1

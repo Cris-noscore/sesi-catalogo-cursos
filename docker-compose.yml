@@ -1,0 +1,48 @@
+# Execução local completa (banco + API + front-end) com um comando:
+#   docker compose up --build
+# Front-end: http://localhost:8080   |   API (Swagger): http://localhost:5080/swagger
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: catalogo
+    ports:
+      - "5432:5432"
+    volumes:
+      - dados-postgres:/var/lib/postgresql/data
+      # Cria também o banco usado pelos testes de integração.
+      - ./database/docker/criar-banco-testes.sql:/docker-entrypoint-initdb.d/01-banco-testes.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d catalogo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      ConnectionStrings__Default: Host=db;Port=5432;Database=catalogo;Username=postgres;Password=postgres
+      Cors__AllowedOrigins__0: http://localhost:8080
+      Cors__AllowedOrigins__1: http://localhost:5173
+    ports:
+      - "5080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ""
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  dados-postgres:

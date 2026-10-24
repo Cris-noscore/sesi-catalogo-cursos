@@ -1,0 +1,18 @@
+# Blueprint do Render (https://render.com/docs/blueprint-spec) — API .NET em container Docker, plano gratuito.
+services:
+  - type: web
+    name: sesi-catalogo-api
+    runtime: docker
+    plan: free
+    region: virginia
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ConnectionStrings__Default
+        sync: false # string de conexão do Supabase (Session Pooler) — informada no painel
+      - key: Cors__AllowedOrigins__0
+        sync: false # URL do front-end publicado na Vercel
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
