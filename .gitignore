@@ -1,0 +1,29 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+
+# Node / Vite
+node_modules/
+dist/
+coverage/
+*.local
+
+# Ambiente
+.env
+.env.*
+!.env.example
+
+# SO / editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Pacotes de publicação gerados
+publicacao/
+*.zip

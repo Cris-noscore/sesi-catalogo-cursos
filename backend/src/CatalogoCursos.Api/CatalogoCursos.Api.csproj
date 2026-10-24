@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>CatalogoCursos.Api</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
+  </ItemGroup>
+
+  <!-- Os scripts SQL versionados (pasta /database/migrations) são embutidos na
+       DLL e aplicados pelo DatabaseMigrator na inicialização da API. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\database\migrations\*.sql" LogicalName="Migrations.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CatalogoCursos.Api.Tests" />
+  </ItemGroup>
+
+</Project>
