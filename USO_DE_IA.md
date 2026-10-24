@@ -39,7 +39,8 @@ Nenhum código gerado foi aceito sem verificação. Validações realizadas:
 
 1. **Testes automatizados no CI** (GitHub Actions, a cada *push*):
    - 40 testes do back-end contra PostgreSQL real (busca, filtros, combinações, paginação, erros e requisitos mínimos de dados);
-   - 6 testes de interface do catálogo (Vitest + Testing Library), ESLint e checagem de tipos do TypeScript;
+   - 27 testes de interface (Vitest + Testing Library), com 92% de cobertura de linhas, ESLint e checagem de tipos do TypeScript;
+   - 46 cenários E2E em navegador real, desktop e mobile (Playwright), incluindo auditoria WCAG 2.1 AA com axe-core;
    - teste ponta a ponta com `docker compose up` (banco + API + front-end via Nginx).
 2. **Scripts SQL executados** em um PostgreSQL 16 local antes do *commit*, conferindo contagens e a coluna de busca.
 3. **Comparação visual com o Figma**: capturas automatizadas (Playwright) das páginas em 1440 px e 390 px,
@@ -80,6 +81,8 @@ Outros ajustes feitos ao longo do processo:
 | O cinza de texto do Figma (`#9E9E9E`) tem contraste 2,7:1, reprovado na WCAG AA | Trocado por `#6B6B70` (5,3:1) e registrado no LIMITACOES.md |
 | Após trocar os dados fictícios pelos do Figma, um teste de busca ("análise dados") deixou de fazer sentido | Teste atualizado para "qualidade controle", mantendo a verificação de vários termos fora de ordem |
 | O ambiente da IA não acessava o repositório de pacotes NuGet, então a API não podia ser compilada ali | A compilação e os testes passaram a rodar no GitHub Actions, o que virou um ganho: CI desde o primeiro *commit* |
+| A auditoria automática **axe-core** (testes E2E) reprovou o contraste do cargo nos depoimentos (branco 85% sobre vermelho = 4,09:1) — detalhe que passou na revisão visual | Texto em branco sólido (5,37:1); o teste passou a proteger contra regressões |
+| O teste E2E de teclado mostrou que o foco ia para o conteúdo já no carregamento, pulando o link "Pular para o conteúdo" | O foco só é movido em trocas de página |
 | Proposta de tentar exportar as imagens pelo modo de edição do Figma | Não foi possível (exige permissão de acesso); a solução foi usar fotos livres equivalentes, registrada como diferença |
 
 ## 7. Considerações

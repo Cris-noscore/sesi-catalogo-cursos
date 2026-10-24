@@ -15,7 +15,7 @@ desenvolvida como atividade prática do processo seletivo **Desenvolvedor de Sis
 > no primeiro acesso após um período sem uso; a interface mostra o estado de carregamento enquanto isso.
 > Caso a hospedagem esteja indisponível, siga a seção [Instruções para execução](#5-instruções-para-execução).
 
-**Documentos complementares:** [USO_DE_IA.md](USO_DE_IA.md) (registro do uso de IA) ·
+**Documentos complementares:** [USO_DE_IA.md](USO_DE_IA.md) (registro do uso de IA) · [docs/TESTES.md](docs/TESTES.md) (estratégia e resultados dos testes) ·
 [LIMITACOES.md](LIMITACOES.md) (limitações, itens não concluídos e diferenças em relação ao Figma).
 
 ---
@@ -78,7 +78,7 @@ Telas implementadas (referência visual: protótipo do Figma `[TEST DEV] SESI In
 | Documentação da API | **OpenAPI nativo do .NET** + Swagger UI | Contrato navegável em `/swagger` |
 | Front-end | **React 19 + TypeScript + Vite 6** + React Router 7 | Componentização, tipagem do contrato da API e build rápido |
 | Estilos | **CSS puro** com *design tokens* (variáveis CSS) extraídos do Figma | Fidelidade ao protótipo sem dependências; fonte Open Sans fornecida, auto-hospedada (WOFF2) |
-| Testes | **xUnit** + `WebApplicationFactory` (API ↔ PostgreSQL real), **Vitest** + Testing Library | Testes de integração ponta a ponta e de interface |
+| Testes | **xUnit** + `WebApplicationFactory`, **Vitest** + Testing Library, **Playwright** + **axe-core** | Integração com banco real, interface, E2E em navegador e acessibilidade automatizada |
 | Contêineres | **Docker** + **Docker Compose** + Nginx | Execução local com um comando, independente da hospedagem |
 | CI/CD | **GitHub Actions** | Build, testes, lint, teste Docker ponta a ponta e geração do ZIP de publicação |
 | Hospedagem (grátis) | **Vercel** (front-end) · **Render** (API em Docker) · **Supabase** (banco) | Planos gratuitos, sem custos |
@@ -155,6 +155,8 @@ sesi-catalogo-cursos/
 │   ├── migrations/                   # V001 (estrutura), V002 (dados fictícios), V003 (ajuste)
 │   ├── scripts/gerar_seed.py         # gera o V002 a partir de dados estruturados
 │   └── docker/                       # inicialização do Postgres no Docker
+├── e2e/                              # testes E2E e de acessibilidade (Playwright + axe-core)
+├── docs/                             # TESTES.md e capturas de tela
 ├── frontend/
 │   ├── public/                       # fontes, imagens otimizadas (WebP), favicon
 │   ├── src/
@@ -450,13 +452,19 @@ Resumo (detalhes, itens não concluídos e diferenças em relação ao Figma em 
 
 ## 13. Testes e qualidade
 
-| Suíte | Ferramenta | O que cobre |
+Detalhes completos em **[docs/TESTES.md](docs/TESTES.md)**. Tudo roda no GitHub Actions a cada *push*.
+
+| Suíte | Ferramentas | Resultado |
 |---|---|---|
-| Integração da API | xUnit + `WebApplicationFactory` + PostgreSQL real | Listagem, busca (acentos, maiúsculas, vários termos, curingas), filtros e combinações, contagem, paginação, ordenação, detalhe, 400/404, `/health`, OpenAPI, imagens, idempotência das migrações e **requisitos mínimos de dados do edital** |
-| Unidade da API | xUnit | Normalização da busca, escape do `LIKE`, validação de parâmetros, conversão de string de conexão, ordem dos scripts |
-| Interface | Vitest + Testing Library | Catálogo: listagem e contador, filtro + URL + limpar, busca com *debounce* + estado vazio, erro + tentar novamente, carregamento |
-| Ponta a ponta | GitHub Actions + Docker Compose | Banco + API + front (Nginx) sobem juntos e respondem corretamente |
-| Estático | ESLint + TypeScript estrito | Front-end sem erros de lint/tipos |
+| Back-end — unidade e integração (API ↔ PostgreSQL real) | xUnit, `WebApplicationFactory`, coverlet, ReportGenerator | **40/40** · cobertura 84% das linhas |
+| Front-end — unidade e interface | Vitest, Testing Library, user-event | **27/27** · cobertura 92% das linhas |
+| E2E em navegador real (desktop e mobile) | Playwright + Docker Compose | **46/46** cenários |
+| Acessibilidade automatizada (WCAG 2.1 A/AA, 6 páginas) | axe-core (Deque) | **0 violações** |
+| Qualidade estática | ESLint, TypeScript estrito | sem erros |
+
+Os testes de requisitos verificam **cada funcionalidade obrigatória do enunciado**, incluindo os estados de carregamento
+e de erro (simulados na rede) e os mínimos de dados fictícios. Os testes também encontraram problemas reais,
+documentados e corrigidos: contraste insuficiente e ordem de foco do teclado.
 
 ---
 
