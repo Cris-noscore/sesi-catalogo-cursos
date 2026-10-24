@@ -142,7 +142,7 @@ sesi-catalogo-cursos/
 │   │   └── wwwroot/imagens/          # imagens dos cursos e ícones das categorias
 │   └── tests/CatalogoCursos.Api.Tests/   # testes unitários e de integração (xUnit)
 ├── database/
-│   ├── migrations/                   # V001 (estrutura) e V002 (dados fictícios)
+│   ├── migrations/                   # V001 (estrutura), V002 (dados fictícios), V003 (ajuste)
 │   ├── scripts/gerar_seed.py         # gera o V002 a partir de dados estruturados
 │   └── docker/                       # inicialização do Postgres no Docker
 ├── frontend/
@@ -221,12 +221,14 @@ cd frontend && npm test -- --run && npm run lint
 - **SGBD:** PostgreSQL 14+ (local: 16 via Docker; produção: Supabase).
 - **Criação do esquema e dos dados:** scripts em [`database/migrations`](database/migrations):
   - `V001__estrutura_inicial.sql` — tabelas, chaves, índices, restrições e a função `f_normalizar`;
-  - `V002__dados_ficticios.sql` — 10 cursos, 4 categorias, 3 modalidades, 3 status, 39 módulos e 91 aulas.
+  - `V002__dados_ficticios.sql` — 10 cursos, 4 categorias, 3 modalidades, 3 status, 39 módulos e 91 aulas;
+  - `V003__textos_alternativos_imagens.sql` — atualiza os textos alternativos após a troca das fotos
+    (exemplo de evolução do banco por nova migração, sem editar scripts já aplicados).
 - **Aplicação automática:** ao iniciar, a API executa o `DatabaseMigrator`, que aplica em ordem os scripts
   ainda não executados (embutidos na DLL), registra versão e *checksum* na tabela `schema_migrations`,
   roda cada script em transação e usa *advisory lock* para evitar execução concorrente.
   Pode ser desligado com `Database__ApplyMigrationsOnStartup=false`.
-- **Aplicação manual (alternativa):** executar os dois arquivos, em ordem, com `psql -f` ou colando no
+- **Aplicação manual (alternativa):** executar os arquivos, em ordem, com `psql -f` ou colando no
   **SQL Editor do Supabase**.
 - **Configuração da conexão** (`ConnectionStrings__Default` ou `DATABASE_URL`): aceita o formato do Npgsql
   (`Host=...;Database=...`) **ou** URI (`postgresql://usuario:senha@host:5432/postgres`), formato exibido pelo Supabase.
@@ -432,7 +434,7 @@ Resumo (detalhes, itens não concluídos e diferenças em relação ao Figma em 
 - **Sem autenticação**: "Matricule-se" e "Área do aluno" levam a uma demonstração do AVA; o progresso das aulas é
   salvo apenas no navegador.
 - **Sem cadastro/edição/exclusão de cursos** (fora do escopo, conforme o enunciado).
-- **Fotos dos cursos** não fornecidas nos materiais: foram usadas imagens livres equivalentes.
+- **Fotos dos cursos** não fornecidas nos materiais: foram usadas imagens livres equivalentes (Pexels).
 
 ---
 
