@@ -12,12 +12,13 @@ on:
 jobs:
   ping:
     runs-on: ubuntu-latest
-    if: ${{ vars.API_URL != '' }}
+    env:
+      API_URL: ${{ vars.API_URL || 'https://sesi-catalogo-api.onrender.com' }}
     steps:
       - name: Chamar /health da API
         run: |
           for tentativa in 1 2 3; do
-            if curl -fsS --max-time 90 "${{ vars.API_URL }}/health"; then exit 0; fi
+            if curl -fsS --max-time 90 "$API_URL/health"; then exit 0; fi
             sleep 20
           done
           exit 1

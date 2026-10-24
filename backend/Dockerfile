@@ -17,6 +17,10 @@ WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT=Production \
     ASPNETCORE_HTTP_PORTS=8080 \
     DOTNET_RUNNING_IN_CONTAINER=true
+# libgssapi-krb5-2: dependência opcional do Npgsql (evita o aviso "Cannot load library libgssapi_krb5.so.2").
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/publish .
 # Executa como usuário sem privilégios (já existente nas imagens oficiais do .NET 8+).
 USER $APP_UID
