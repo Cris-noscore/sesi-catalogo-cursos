@@ -7,8 +7,8 @@ desenvolvida como atividade prática do processo seletivo **Desenvolvedor de Sis
 
 | | |
 |---|---|
-| **Aplicação publicada** | `https://<definir-apos-publicacao>.vercel.app` |
-| **API publicada (Swagger)** | `https://<definir-apos-publicacao>.onrender.com/swagger` |
+| **Aplicação publicada** | https://sesi-catalogo-cursos.vercel.app |
+| **API publicada (Swagger)** | https://sesi-catalogo-api.onrender.com/swagger |
 | **Repositório** | https://github.com/Cris-noscore/sesi-catalogo-cursos |
 
 > Todos os dados exibidos são **fictícios**. A API gratuita (Render) pode levar até ~50 s para "acordar"
@@ -54,6 +54,16 @@ Telas implementadas (referência visual: protótipo do Figma `[TEST DEV] SESI In
 | `/cursos/:id` | **Detalhes do curso** — apresentação, ficha técnica, módulos/aulas, dúvidas, matrícula | Figma "02. Detalhes curso" |
 | `/cursos/:id/aula` | **AVA** — tela de aula com módulos, progresso e navegação | Figma "03. AVA" |
 | `/area-do-aluno` | Página informativa (acesso simulado ao Moodle) | Adicional |
+
+### Capturas de tela
+
+| Home | Catálogo (filtros combinados) |
+|---|---|
+| ![Home](docs/capturas/home-desktop.webp) | ![Catálogo](docs/capturas/catalogo-desktop.webp) |
+| **Detalhes do curso** | **AVA (tela de aula)** |
+| ![Detalhes](docs/capturas/detalhe-desktop.webp) | ![AVA](docs/capturas/ava-desktop.webp) |
+| **Nenhum curso encontrado** | **Mobile (home · catálogo · detalhe)** |
+| ![Estado vazio](docs/capturas/vazio-desktop.webp) | <img src="docs/capturas/home-mobile.webp" width="32%"> <img src="docs/capturas/catalogo-mobile.webp" width="32%"> <img src="docs/capturas/detalhe-mobile.webp" width="32%"> |
 
 ---
 
