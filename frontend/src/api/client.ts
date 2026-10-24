@@ -67,7 +67,12 @@ async function requisitar<T>(caminho: string, signal?: AbortSignal): Promise<T> 
     throw new ApiError(detalhe || 'Ocorreu um erro ao carregar os dados. Tente novamente.', resposta.status);
   }
 
-  return (await resposta.json()) as T;
+  try {
+    return (await resposta.json()) as T;
+  } catch {
+    // Ex.: a URL da API está errada e o servidor devolveu uma página HTML.
+    throw new ApiError('O servidor retornou uma resposta inválida. Tente novamente em instantes.');
+  }
 }
 
 /** Monta a query string a partir do estado de busca/filtros. */
